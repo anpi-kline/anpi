@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>オレンジのアイコンにする手順</title>
+<style>
+:root{--bg:#f3f6fa;--card:#fff;--line:#dbe3ec;--txt:#151f2b;--sub:#5f6d80;
+--acc:#0b5fbf;--accbg:#e8f1fc;--ok:#0f7a3f;--okbg:#e3f4ea;--wa:#a86400;--wabg:#fcf1de;
+--ng:#b32b23;--ngbg:#fbe8e6;--band:#111d2e;--soft:#eaeff6}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#0d121a;--card:#151d28;--line:#28323f;--txt:#e8eef7;--sub:#93a1b4;
+--acc:#5aa9ff;--accbg:#14263c;--ok:#54d189;--okbg:#0e2c1d;--wa:#f0b43a;--wabg:#2f250b;
+--ng:#ff8f85;--ngbg:#361817;--band:#08101c;--soft:#1a2431}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);
+font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI",Meiryo,system-ui,sans-serif;
+font-size:16px;line-height:1.8}
+.band{background:var(--band);color:#fff;padding:22px 16px}
+.band .in{max-width:820px;margin:0 auto}
+.band h1{margin:0;font-size:22px;font-weight:800}
+.band p{margin:6px 0 0;font-size:13px;color:#a9b8cc}
+main{max-width:820px;margin:0 auto;padding:10px 14px 70px}
+h2{font-size:19px;margin:32px 0 8px;display:flex;gap:9px;align-items:baseline}
+h2 .n{flex:none;font-size:12px;font-weight:800;color:#fff;background:var(--acc);
+border-radius:20px;padding:3px 12px;line-height:1.6}
+h3{font-size:16px;margin:20px 0 4px}
+.box{border-radius:11px;padding:13px 16px;margin:13px 0;font-size:15px}
+.b-ok{background:var(--okbg);border:1px solid var(--ok)}
+.b-acc{background:var(--accbg);border:1px solid var(--acc)}
+.b-wa{background:var(--wabg);border:1px solid var(--wa)}
+.b-ng{background:var(--ngbg);border:2px solid var(--ng)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 17px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-size:13.5px;color:var(--sub);font-weight:800}
+code{background:var(--soft);padding:2px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:14px}
+ol,ul{padding-left:22px}li{margin:7px 0}
+.ic{display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;margin:12px 0}
+.ic .one{text-align:center}
+.ic .sq{width:96px;height:96px;border-radius:22px;
+background:linear-gradient(135deg,#d7400d,#f99a1f);display:flex;align-items:center;justify-content:center;
+box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.ic .sq.gy{background:#9aa0a6;border-radius:22px}
+.ic svg{width:58px;height:58px}
+.ic .lb{font-size:12.5px;color:var(--sub);margin-top:6px}
+.ic .gychar{color:#fff;font-size:44px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="band"><div class="in">
+<h1>iPhoneでオレンジのアイコンにする手順</h1>
+<p>所要 約15分／費用 0円／このフォルダのファイルをそのまま使います</p>
+</div></div>
+<main>
+
+<h2><span class="n">なぜ</span>いまアイコンが灰色なのか</h2>
+
+<div class="ic">
+ <div class="one">
+  <div class="sq gy"><span class="gychar">安</span></div>
+  <div class="lb">いま（灰色）</div>
+ </div>
+ <div class="one">
+  <div class="sq"><svg viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round">
+    <path d="M20 46 A34 34 0 0 1 80 46"/><path d="M31 60 A22 22 0 0 1 69 60"/>
+    <rect x="41" y="68" width="18" height="26" rx="4" fill="#fff" stroke="none"/></svg></div>
+  <div class="lb">こうしたい</div>
+ </div>
+</div>
+
+<p>Apps Script のURL（<code>script.google.com/…/exec</code>）を開くと、
+いちばん外側のページは<b>Googleが用意したもの</b>で、私たちの画面はその内側の枠に表示されます。</p>
+
+<p>iPhoneは<b>いちばん外側のページ</b>からアイコンを読みます。
+そこはGoogleのページなのでアイコンの指定がなく、
+iPhoneがタイトルの「安否確認…」から<b>「安」の1文字で灰色のアイコンを自動生成</b>しています。</p>
+
+<div class="box b-ng">
+<b>これは Apps Script のままでは直せません。</b>
+外側のページはGoogleのものなので、こちらから書き換えられないためです。<br>
+<b>ページを自分たちの置き場所に置けば、指定どおりのアイコンになります。</b>
+</div>
+
+<div class="box b-ok">
+<b>Android用のアプリ（APK）は、すでにオレンジのアイコンです。</b>
+灰色になるのは、URLからホーム画面に追加した場合だけです。
+</div>
+
+<h2><span class="n">結果</span>置き場所を作ると、こう変わります</h2>
+
+<table>
+<tr><th></th><th>いま（Apps ScriptのURL）</th><th>置き場所を作ったあと</th></tr>
+<tr><td>アイコン</td><td>灰色の「安」</td><td><b>オレンジのアイコン</b></td></tr>
+<tr><td>全画面で開く</td><td>△ 上にバーが残る</td><td><b>◎ アプリそっくり</b></td></tr>
+<tr><td>圏外で開く</td><td><b>× 開けない</b></td><td><b>◎ 開ける</b></td></tr>
+<tr><td>報告の送信</td><td>◎ できる</td><td>◎ できる（同じ倉庫へ）</td></tr>
+<tr><td>費用</td><td>0円</td><td>0円</td></tr>
+</table>
+
+<div class="box b-acc">
+<b>圏外で開けるようになるのが、実はいちばん大きい変化です。</b>
+災害時は電波が弱くなります。いまのURL方式だと、iPhoneの方はアプリが開けません。
+置き場所を作れば、一度開いておけば圏外でも開けます（Android版APKと同じになります）。
+</div>
+
+<h2><span class="n">1</span>GitHubの無料アカウントを作る</h2>
+
+<div class="card">
+<ol>
+<li><a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a> を開く</li>
+<li>メールアドレス（<code>anpi.keiline@gmail.com</code> がおすすめ）・パスワード・ユーザー名を入れる<br>
+    <b>ユーザー名は英数字で。あとでURLに使われます</b>（例 <code>anpi-kline</code>）</li>
+<li>メールに届いた数字を入れて完了</li>
+</ol>
+<p style="font-size:14px;color:var(--sub)">
+※ 無料プランでよいです。有料の案内が出ても選ばないでください。<br>
+※ クレジットカードの登録は不要です。</p>
+</div>
+
+<div class="box b-wa">
+<b>GitHubは、世界中の会社が使っているファイルの置き場所です。</b>
+プログラムを書く人向けのサービスですが、<b>ファイルを置くだけなら難しくありません。</b>
+今回は「ドラッグして置く」だけで終わります。
+</div>
+
+<h2><span class="n">2</span>置き場所を作る</h2>
+
+<div class="card">
+<ol>
+<li>右上の <b>＋</b> → <b>New repository</b>（新しいリポジトリ）</li>
+<li><b>Repository name</b> に <code>anpi</code> と入れる</li>
+<li><b>Public</b>（公開）を選ぶ<br>
+    <span style="font-size:14px;color:var(--sub)">
+    ※ 置くファイルに個人情報は入っていません。名簿はGoogle側にあります</span></li>
+<li><b>Create repository</b> を押す</li>
+</ol>
+</div>
+
+<div class="box b-ng">
+<b>Public（公開）で問題ない理由。</b>
+ここに置くのは<b>画面の見た目と、倉庫のURLと、担当者3名の電話番号</b>だけです。
+300人の名簿・回答・氏名は<b>すべてGoogleスプレッドシート側</b>にあり、
+合いことばがないと取り出せません。<br>
+担当者の携帯番号が気になる場合は、<code>contacts.json</code> の番号を
+<code>090-XXXX-XXXX</code> のように伏せてからアップロードしてください。
+アプリは起動時に倉庫から本物の番号を取りに行くので、実際の動作は変わりません。
+</div>
+
+<h2><span class="n">3</span>ファイルを置く</h2>
+
+<div class="box b-acc">
+<b>GitHubが日本語表示のときの押す場所。</b><br>
+できた画面の<b>青い枠</b>の中に、こう書かれた1行があります。
+<div style="background:var(--soft);border:1px solid var(--line);border-radius:8px;
+padding:11px 14px;margin:8px 0;font-size:14.5px">
+新しいファイルを作成するか、<b style="color:var(--acc);text-decoration:underline">既存のファイルをアップロード</b>して始めましょう。
+</div>
+下線の <b>「既存のファイルをアップロード」</b> を押してください。<br>
+<span style="font-size:14px;color:var(--sub)">
+※ 見つからないときは、上の <b>コード</b> タブ →
+<b>ファイルの追加</b>（Add file）→ <b>ファイルをアップロード</b>（Upload files）でも同じ画面になります。</span>
+</div>
+
+<div class="card">
+<ol>
+<li>青い枠の <b>「既存のファイルをアップロード」</b> を押す</li>
+<li>エクスプローラーで <code>公開用_GitHubPages</code> フォルダを開く</li>
+<li><b>Ctrl+A</b> で全部選ぶ → <b>★アップロード手順.html を Ctrl+クリックで外す</b><br>
+    （12個が選ばれた状態になります）</li>
+<li>選んだファイルを、GitHubの枠の中に<b>ドラッグして落とす</b></li>
+<li>下まで進んで <b>変更をコミット</b>（Commit changes）を押す</li>
+</ol>
+<p style="font-size:14px;color:var(--sub)">
+※ 手順書もいっしょに上げてしまっても、動作に問題はありません。
+　 中に合いことばなどは入っていません。</p>
+
+<h3>アップロードするファイル（12個）</h3>
+<table>
+<tr><th>ファイル</th><th>役割</th></tr>
+<tr><td><code>index.html</code></td><td>スタッフ用の報告画面</td></tr>
+<tr><td><code>admin.html</code></td><td>上司用の管理画面</td></tr>
+<tr><td><code>config.js</code></td><td>倉庫のURLと合いことば</td></tr>
+<tr><td><code>contacts-loader.js</code></td><td>電話番号を最新にする係</td></tr>
+<tr><td><code>submit.js</code></td><td>アプリから直接送る係</td></tr>
+<tr><td><code>contacts.json</code></td><td>電話番号の初期値</td></tr>
+<tr><td><code>manifest.json</code><br><code>manifest-admin.json</code></td><td>アイコンと全画面の設定</td></tr>
+<tr><td><code>sw.js</code></td><td>圏外でも開けるようにする係</td></tr>
+<tr><td><code>icon-180.png</code><br><code>icon-192.png</code><br><code>icon-512.png</code></td><td><b>オレンジのアイコン</b></td></tr>
+</table>
+<p style="font-size:14px;color:var(--sub)">
+※ <code>★アップロード手順.html</code>（このファイル）は上げなくてよいです。</p>
+</div>
+
+<h2><span class="n">4</span>公開する</h2>
+
+<div class="card">
+<ol>
+<li>上の <b>舞台設定</b>（Settings・歯車マーク）を押す</li>
+<li>左のメニューから <b>Pages</b>（ページ）を押す</li>
+<li><b>Source</b>（ソース）を <b>Deploy from a branch</b>（ブランチからデプロイ）にする</li>
+<li><b>Branch</b>（ブランチ）を <b>main</b>、フォルダは <b>/ (root)</b> にして <b>Save</b>（保存）</li>
+<li>1〜2分待って、同じ画面を再読み込みすると<b>URLが表示されます</b></li>
+</ol>
+<p>URLはこうなります（ユーザー名は <code>anpi-kline</code> で作成済みです）。</p>
+<table>
+<tr><th>使う人</th><th>URL</th></tr>
+<tr><td><b>スタッフ（300人）</b></td><td><code>https://anpi-kline.github.io/anpi/</code></td></tr>
+<tr><td><b>上司5人</b></td><td><code>https://anpi-kline.github.io/anpi/admin.html</code></td></tr>
+</table>
+</div>
+
+<h2><span class="n">5</span>ホーム画面に追加する</h2>
+
+<div class="card">
+<ul>
+<li><b>iPhone</b>：Safari で開く → 下の共有ボタン（↑）→「ホーム画面に追加」</li>
+<li><b>Android</b>：Chrome で開く → 右上の ︙ →「ホーム画面に追加」</li>
+</ul>
+<p><b>オレンジのアイコンが出れば成功です。</b>
+タップすると全画面で開き、一度開いたあとは圏外でも開けます。</p>
+</div>
+
+<div class="box b-wa">
+<b>灰色のアイコンが残っている場合。</b>
+前に追加したものは、<b>長押しして削除</b>してから、新しいURLで追加し直してください。
+iPhoneは追加したときのアイコンを覚え続けるためです。
+</div>
+
+<h2><span class="n">6</span>あとで中身を直したいとき</h2>
+
+<div class="card">
+<p>GitHubの画面で <b>Add file → Upload files</b> から、同じ名前のファイルを上げ直すだけです。
+1〜2分で反映されます。</p>
+<div class="box b-wa" style="margin-bottom:0">
+<b>スタッフのスマホに反映させるには、<code>sw.js</code> の番号も1つ増やしてください。</b><br>
+<code>const CACHE = 'anpi-v3'</code> → <code>'anpi-v4'</code><br>
+圏外用に保存したファイルを使い続けるため、この番号を変えないと古い画面が出ます。
+</div>
+</div>
+
+<h2><span class="n">補足</span>Apps ScriptのURLはどうなる？</h2>
+
+<div class="card">
+<p><b>そのまま残しておいてください。捨てる必要はありません。</b></p>
+<table>
+<tr><th></th><th>役割</th></tr>
+<tr><td>GitHub Pages の2つのURL</td><td><b>人が開く画面</b>（アイコン・全画面・圏外対応）</td></tr>
+<tr><td>Apps Script の <code>/exec</code></td><td><b>データの受け渡し</b>（回答の記録・電話番号・状況）</td></tr>
+</table>
+<p>役割が分かれるだけで、<b>スプレッドシートも名簿も回答も、いまのまま変わりません。</b>
+Android版のAPKも作り直し不要です。</p>
+</div>
+
+<div class="box b-acc">
+<b>ここまでやるのが大変なら、無理に急ぐ必要はありません。</b>
+いまのApps ScriptのURLでも<b>報告機能は完全に動きます</b>（アイコンが灰色で、圏外では開けないだけです）。
+Androidのスタッフはすでにオレンジのアイコンで、圏外でも開けます。<br>
+<b>iPhoneの方が多い、または圏外対応を重視するなら、この手順をやる価値があります。</b>
+</div>
+
+</main>
+</body>
+</html>

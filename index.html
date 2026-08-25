@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>安否確認のしかた / Confirmação de Segurança</title>
+
+<!-- ▼ ここから「ホーム画面に追加でアプリになる」ための設定 -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#132540">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Segurança">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<!-- ▲ ここまで -->
+<style>
+/* =========================================================
+   ★★★ 電話番号の設定はここだけ直せばOK ★★★
+   Para alterar os telefones, edite somente esta parte.
+   ========================================================= */
+:root{
+  --bg:#f2f5f9; --card:#fff; --line:#dde3ea; --txt:#16202c; --sub:#68758a;
+  --accent:#0b63c5; --accent-soft:#e7f0fb;
+  --safe:#127a41; --safe-bg:#e4f4ea; --safe-line:#9dd3b3;
+  --mid:#b06d00;  --mid-bg:#fcf1de;  --mid-line:#e8c48a;
+  --bad:#b8322a;  --bad-bg:#fbe9e7;  --bad-line:#eeaaa4;
+  --band:#132540;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e131a; --card:#161d27; --line:#2a3442; --txt:#e8eef6; --sub:#95a3b6;
+  --accent:#5aa9ff; --accent-soft:#152a42;
+  --safe:#57d58a; --safe-bg:#0f2c1e; --safe-line:#1f5c3a;
+  --mid:#f2b73d;  --mid-bg:#31260c;  --mid-line:#5c4a1c;
+  --bad:#ff8f85;  --bad-bg:#381917;  --bad-line:#6b2f2a;
+  --band:#0a121e;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e131a; --card:#161d27; --line:#2a3442; --txt:#e8eef6; --sub:#95a3b6;
+  --accent:#5aa9ff; --accent-soft:#152a42;
+  --safe:#57d58a; --safe-bg:#0f2c1e; --safe-line:#1f5c3a;
+  --mid:#f2b73d;  --mid-bg:#31260c;  --mid-line:#5c4a1c;
+  --bad:#ff8f85;  --bad-bg:#381917;  --bad-line:#6b2f2a;
+  --band:#0a121e;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--txt);
+ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,-apple-system,sans-serif;
+ font-size:16px;line-height:1.8}
+.band{background:var(--band);color:#fff;padding:14px 16px}
+.band .inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.band h1{font-size:17px;margin:0;font-weight:800;letter-spacing:.01em}
+.band .sub{font-size:12px;opacity:.75;width:100%;margin-top:-2px}
+.langsw{margin-left:auto;display:inline-flex;border:1.5px solid #46618c;border-radius:22px;overflow:hidden;flex:none}
+.langsw button{background:transparent;border:none;color:#c7d4e6;padding:7px 15px;font-size:13.5px;cursor:pointer;font-family:inherit;font-weight:700}
+.langsw button.on{background:#4da3ff;color:#062040}
+main{max-width:640px;margin:0 auto;padding:18px 14px 70px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.step>h2{display:flex;align-items:flex-start;gap:10px;margin:0 0 8px;font-size:18px;line-height:1.45;text-wrap:balance}
+.no{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;
+ display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;margin-top:2px}
+p{margin:8px 0}
+.lead{font-size:19px;font-weight:800;text-align:center;margin:4px 0 16px;text-wrap:balance}
+.note{color:var(--sub);font-size:14px}
+.big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.big3 div{border-radius:11px;padding:12px 4px;text-align:center;border:2px solid}
+.big3 .n{display:block;font-size:34px;font-weight:800;line-height:1}
+.big3 .w{font-size:13.5px;font-weight:800;display:block;margin-top:4px}
+.c1{background:var(--safe-bg);border-color:var(--safe-line);color:var(--safe)}
+.c2{background:var(--mid-bg);border-color:var(--mid-line);color:var(--mid)}
+.c3{background:var(--bad-bg);border-color:var(--bad-line);color:var(--bad)}
+/* メール画面の見本 */
+.mock{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0;background:var(--card)}
+.mock .bar{background:var(--accent);color:#fff;padding:8px 12px;font-size:13px;font-weight:700}
+.mock .fld{display:flex;border-bottom:1px solid var(--line);font-size:14px}
+.mock .fld b{flex:none;width:64px;padding:10px 12px;color:var(--sub);font-weight:700;font-size:13px;background:var(--accent-soft)}
+.mock .fld span{padding:10px 12px}
+.mock .val{font-size:26px;font-weight:800;color:var(--safe);letter-spacing:.05em}
+.mock .body{padding:12px;color:var(--sub);font-size:14px;min-height:64px}
+.strike{text-decoration:line-through;color:var(--sub);opacity:.6}
+.tel{display:flex;align-items:center;gap:12px;background:var(--card);border:2px solid var(--accent);
+ border-radius:12px;padding:13px 15px;text-decoration:none;color:var(--txt);margin-bottom:9px}
+.tel:hover{background:var(--accent-soft)}
+.tel .ico{font-size:22px}
+.tel .who{font-size:13px;color:var(--sub);font-weight:700;display:block}
+.tel .num{font-size:21px;font-weight:800;color:var(--accent);letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.warn{background:var(--mid-bg);border:1px solid var(--mid-line);border-radius:11px;padding:12px 15px;font-size:14.5px;margin:12px 0}
+.okbox{background:var(--safe-bg);border:1px solid var(--safe-line);border-radius:11px;padding:12px 15px;font-size:14.5px;margin:12px 0}
+label{display:block;font-weight:800;font-size:14px;margin:14px 0 5px}
+select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;
+ font-family:inherit;font-size:16px;background:var(--card);color:var(--txt)}
+.pickrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pick{border:2px solid var(--line);background:var(--card);border-radius:11px;padding:12px 4px;cursor:pointer;
+ font-family:inherit;color:var(--txt);text-align:center;line-height:1.3}
+.pick .n{display:block;font-size:26px;font-weight:800}
+.pick .w{font-size:12.5px;font-weight:700}
+.pick[aria-pressed="true"].p1{background:var(--safe-bg);border-color:var(--safe);color:var(--safe)}
+.pick[aria-pressed="true"].p2{background:var(--mid-bg);border-color:var(--mid);color:var(--mid)}
+.pick[aria-pressed="true"].p3{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+button.go{width:100%;margin-top:16px;background:var(--accent);color:#fff;border:none;border-radius:10px;
+ padding:15px;font-size:16.5px;font-weight:800;font-family:inherit;cursor:pointer}
+button.go:hover{filter:brightness(1.1)}
+.ghost{background:var(--card);color:var(--accent);border:1.5px solid var(--accent);border-radius:9px;
+ padding:9px 16px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+details{border-top:1px solid var(--line);padding:12px 0}
+details:first-of-type{border-top:none}
+summary{font-weight:800;cursor:pointer;font-size:15px}
+details p{font-size:14.5px;color:var(--sub);margin:8px 0 0}
+footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 14px 40px}
+.hide{display:none}
+@media print{
+ :root{--bg:#fff;--card:#fff;--txt:#111;--sub:#555;--line:#bbb;--accent:#0b63c5}
+ .band .langsw,.noprint{display:none!important} body{font-size:13px}
+ .step{break-inside:avoid;border:1px solid #ccc}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="band"><div class="inner">
+  <h1 id="h1">🛟 安否確認のしかた</h1>
+  <span class="langsw noprint">
+    <button id="bja" onclick="setLang('ja')">🇯🇵 日本語</button>
+    <button id="bpt" onclick="setLang('pt')">🇧🇷 Português</button>
+  </span>
+  <span class="sub" id="hsub">ケイライン　社員のみなさまへ</span>
+</div></div>
+
+<main id="app"></main>
+<footer id="foot"></footer>
+
+<script>
+/* ============ 会社の電話番号 / Telefones da empresa ============
+   ここは「はじめの値」です。ふだんの変更は contacts.json を書き換えてください。
+   （アプリを作り直さなくても、番号だけ差し替わります）
+   ※ 社内配布アプリ用。インターネットには公開しないこと。 */
+var TEL=[
+ {ja:'豊田担当（佐々木）',pt:'Toyota (Sr. Sasaki)',    who:'佐々木',num:'090-7610-7316'},
+ {ja:'小牧担当（塚崎）',  pt:'Komaki (Sr. Tsukazaki)', who:'塚崎',  num:'080-4221-3134'},
+ {ja:'本部',            pt:'Matriz',                 who:'',      num:'052-678-0805'}
+];
+const ORG='ケイライン';
+/* ポルトガル語画面で使う会社名（カタカナは読めないため） */
+const ORG_PT='K-Line';
+
+/* ============ 報告メールの送り先 / Para onde enviar ============
+   安否確認用のGmailアドレスを入れてください。
+   空にすると「メールで送る」ボタンは出ません。 */
+var MAIL='anpi.keiline@gmail.com';
+
+/* ============ 文言 ============ */
+const T={
+ja:{
+ h1:'🛟 安否確認のしかた', hsub:ORG+'　社員のみなさまへ',
+ lead:'地震などの災害が起きたら、<br>会社に「無事です」と知らせてください。',
+ s1:'まず、自分と家族の安全を確保する',
+ s1p:'報告よりも、自分の身の安全が先です。安全な場所に移動してから、落ち着いて連絡してください。',
+ s2:'会社から届いたメールに「返信」する',
+ s2p:'災害が起きると、会社からこのようなメールが届きます。<br><b>そのメールに「返信」して、件名に番号だけを書いてください。</b>',
+ mockbar:'返信メール',
+ mockto:'宛先', mocksub:'件名', mockbody:'本文',
+ mockold:'Re: 安否確認のお願い',
+ mocknote:'← 元の件名は<b>すべて消して</b>、番号だけにする',
+ mockbodytxt:'家族も全員無事です。明日から出社できます。',
+ numh:'書く番号はこの3つだけ',
+ n1:'安全', n2:'軽傷', n3:'重傷',
+ s2b:'本文には、わかる範囲で次のことを書いてください（書けなくても大丈夫です）。',
+ s2li:['家族は無事か','出社できるか','自宅に被害はあるか','今どこにいるか'],
+ s3:'メールが使えないときは、電話する',
+ s3p:'停電やスマホの故障でメールが使えないときは、下のボタンを押すとそのまま電話がかかります。',
+ s3warn:'災害のときは電話がとてもつながりにくくなります。<b>できるだけメールの返信でお願いします。</b>',
+ s4:'練習してみましょう',
+ s4p:'下のボタンで報告の練習ができます。<b>これは練習用なので、押しても会社には送られません。</b>',
+ fq:'あなたの状況', freq:'必須',
+ fwork:'出社できますか', ffam:'ご家族の安否', fhouse:'自宅の被害', fmsg:'そのほか伝えたいこと',
+ fmsgph:'今いる場所、必要な手助けなど',
+ wok:'できる', wng:'できない', wtbd:'まだわからない',
+ fok:'全員無事', fng:'連絡が取れない人がいる', finj:'けが人がいる',
+ hok:'被害なし', hpart:'一部こわれた', hbad:'住めない',
+ send:'報告する（練習）',
+ needst:'まず 1・2・3 のどれかを選んでください',
+ done:'✅ 報告できました（これは練習です）',
+ donep:'本番でも、これと同じように報告してください。会社の担当者の画面に、あなたの状況がすぐ表示されます。',
+ again:'もう一度ためす',
+ qh:'よくある質問',
+ q:[['番号を書きまちがえた','もう一度、正しい番号だけを書いて返信してください。あとから届いたほうが有効になります。'],
+    ['本文に何も書けない','番号だけでも大丈夫です。まずは 1・2・3 を送ってください。'],
+    ['家族が心配で報告どころではない','まずご家族を優先してください。落ち着いてからで構いません。'],
+    ['返信したのに、また同じメールが届いた','うまく届いていない可能性があります。もう一度返信するか、電話でご連絡ください。'],
+    ['これは本物の災害？','件名や本文に「訓練」と書いてあれば練習です。書いていなければ本物です。']],
+ tel_masked:'※ 番号が未設定です。管理者に確認してください',
+ loc_l:'現在地',
+ loc_btn:'📍 いまの場所を送る',
+ loc_why:'助けが必要なときに、会社があなたを探せます。押したときだけ調べます。ふだん見張ることはありません。押さなくても報告できます。',
+ loc_wait:'調べています…',
+ loc_ok:'場所がわかりました',
+ loc_acc:'誤差およそ',
+ loc_map:'地図で見る',
+ loc_clear:'消す',
+ loc_deny:'許可されませんでした。ブラウザが「位置情報を許可しますか？」と聞いてきたら「許可」を押してください。場所なしでも報告できます。',
+ loc_na:'この端末では場所を調べられませんでした。場所なしでも報告できます。',
+ loc_time:'時間がかかりすぎました。電波の良い場所でもう一度お試しください。',
+ loc_https:'この画面はパソコンのファイルから開いているため、場所を調べられません。スマホでURLから開くと使えます。',
+ mail_btn:'✉ この内容をメールで送る',
+ mail_note:'メールアプリが開きます。中身はすべて入力ずみなので、送信ボタンを押すだけです。',
+ print:'この案内を印刷する',
+ inst:'📲 このページをアプリにする',
+ instp:'ホーム画面に追加すると、アイコンをタップするだけで開けます。一度開いておけば、電波がないときでも表示できます。',
+ insti:'<b>iPhone</b>　画面下の <b>共有ボタン（↑）</b> を押す → <b>「ホーム画面に追加」</b>',
+ insta:'<b>Android</b>　右上の <b>⋮</b> を押す → <b>「ホーム画面に追加」</b>',
+ foot:ORG+'　安否確認システム'
+},
+pt:{
+ h1:'🛟 Como informar que você está bem', hsub:ORG_PT+' — a todos os funcionários',
+ lead:'Depois de um terremoto,<br>avise a empresa que você está bem.',
+ s1:'Primeiro, fique em um lugar seguro',
+ s1p:'Cuide de você e da sua família primeiro. Depois, com calma, avise a empresa.',
+ s2:'Responda ao e-mail que a empresa enviou',
+ s2p:'A empresa vai mandar um e-mail assim.<br><b>Responda esse e-mail. No assunto, escreva SÓ o número.</b>',
+ mockbar:'Resposta',
+ mockto:'Para', mocksub:'Assunto', mockbody:'Mensagem',
+ mockold:'Re: Confirmação de segurança',
+ mocknote:'← Apague o assunto todo. Deixe só o número',
+ mockbodytxt:'Minha família também está bem. Posso trabalhar amanhã.',
+ numh:'São apenas estes 3 números',
+ n1:'Estou seguro(a)', n2:'Ferimento leve', n3:'Ferimento grave',
+ s2b:'Se conseguir, escreva também estas coisas. Se não conseguir, tudo bem.',
+ s2li:['Se sua família está bem','Se consegue ir trabalhar','Se sua casa teve danos','Onde você está agora'],
+ s3:'Se não puder usar e-mail, ligue',
+ s3p:'Sem internet? Toque em um botão abaixo para ligar.',
+ s3warn:'Depois de um terremoto, o telefone quase não funciona. <b>É melhor responder por e-mail.</b>',
+ s4:'Vamos treinar',
+ s4p:'Treine aqui. <b>É só treino. Nada vai para a empresa.</b>',
+ fq:'Sua situação', freq:'obrigatório',
+ fwork:'Consegue ir trabalhar?', ffam:'Situação da sua família', fhouse:'Danos na sua casa', fmsg:'Outras informações',
+ fmsgph:'Onde você está, se precisa de ajuda…',
+ wok:'Sim', wng:'Não', wtbd:'Ainda não sei',
+ fok:'Todos bem', fng:'Não consigo falar com alguém da família', finj:'Alguém está ferido',
+ hok:'Sem danos', hpart:'Danos parciais', hbad:'Não dá para morar nela',
+ send:'Enviar (treino)',
+ needst:'Escolha primeiro 1, 2 ou 3',
+ done:'✅ Enviado (isto foi um treino)',
+ donep:'No dia de verdade, faça igual. O responsável vê sua resposta na hora.',
+ again:'Treinar de novo',
+ qh:'Perguntas frequentes',
+ q:[['Escrevi o número errado','Responda de novo com o número certo. Vale a última resposta.'],
+    ['Não sei o que escrever no e-mail','Só o número já basta. Mande 1, 2 ou 3.'],
+    ['Estou preocupado com minha família','Cuide da família primeiro. Avise depois, com calma.'],
+    ['Respondi mas chegou o mesmo e-mail','Talvez não tenha chegado. Responda de novo ou ligue.'],
+    ['Isto é de verdade?','Se estiver escrito TREINAMENTO, é treino. Se não estiver, é de verdade.']],
+ tel_masked:'※ Número não configurado. Fale com o administrador',
+ loc_l:'Localização atual',
+ loc_btn:'📍 Enviar minha localização',
+ loc_why:'Assim a empresa acha você se precisar de ajuda. Só funciona quando você toca no botão. A empresa não vê onde você está em outros momentos. Pode enviar sem isso também.',
+ loc_wait:'Procurando…',
+ loc_ok:'Localização obtida',
+ loc_acc:'margem de erro aprox.',
+ loc_map:'Ver no mapa',
+ loc_clear:'Apagar',
+ loc_deny:'Você respondeu "não permitir". Toque de novo e escolha "Permitir". Pode enviar sem isso também.',
+ loc_na:'Este celular não conseguiu achar o lugar. Pode enviar sem isso.',
+ loc_time:'Demorou muito. Tente de novo onde o sinal for melhor.',
+ loc_https:'Esta tela foi aberta a partir de um arquivo do computador, por isso a localização não funciona. Abra pelo link no celular.',
+ mail_btn:'✉ Enviar isto por e-mail',
+ mail_note:'O e-mail abre já escrito. Você só toca em enviar.',
+ print:'Imprimir este aviso',
+ inst:'📲 Transforme esta página em aplicativo',
+ instp:'Coloque na tela inicial do celular. Abre com um toque e funciona até sem internet.',
+ insti:'<b>iPhone</b>　Toque no botão <b>Compartilhar (↑)</b> → <b>"Adicionar à Tela de Início"</b>',
+ insta:'<b>Android</b>　Toque em <b>⋮</b> no canto → <b>"Adicionar à tela inicial"</b>',
+ foot:ORG_PT+' — Sistema de Confirmação de Segurança'
+}};
+
+var lang=(navigator.language||'ja').toLowerCase().startsWith('pt')?'pt':'ja';
+var pick=0;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dial=n=>'tel:'+String(n).replace(/[^0-9+]/g,'');
+/* 選択肢はコードで持ち、表示のときだけ言語に直す。
+   日本語で選んだ内容が、会社側のポルトガル語画面でも正しく読めるようにするため。 */
+const opts=keys=>keys.map(k=>`<option value="${k}">${esc(T[lang][k])}</option>`).join('');
+var dv=v=>(T[lang][v]!==undefined?T[lang][v]:(v||''));
+
+function setLang(l){lang=l;pick=0;document.documentElement.lang=(l==='pt'?'pt-BR':'ja');render();window.scrollTo(0,0);}
+
+function render(){
+ const x=T[lang];
+ document.getElementById('h1').textContent=x.h1;
+ document.getElementById('hsub').textContent=x.hsub;
+ document.getElementById('bja').className=lang==='ja'?'on':'';
+ document.getElementById('bpt').className=lang==='pt'?'on':'';
+ document.getElementById('foot').textContent=x.foot;
+
+ document.getElementById('app').innerHTML=`
+ <p class="lead">${x.lead}</p>
+
+ <section class="step">
+  <h2><span class="no">1</span>${esc(x.s1)}</h2>
+  <p>${esc(x.s1p)}</p>
+ </section>
+
+ <section class="step">
+  <h2><span class="no">2</span>${esc(x.s2)}</h2>
+  <p>${x.s2p}</p>
+
+  <div class="mock">
+   <div class="bar">✉ ${esc(x.mockbar)}</div>
+   <div class="fld"><b>${esc(x.mockto)}</b><span>anpi@k-line.to</span></div>
+   <div class="fld"><b>${esc(x.mocksub)}</b><span><span class="strike">${esc(x.mockold)}</span><br>
+     <span class="val">1</span> <span class="note">${x.mocknote}</span></span></div>
+   <div class="body">${esc(x.mockbodytxt)}</div>
+  </div>
+
+  <p><b>${esc(x.numh)}</b></p>
+  <div class="big3">
+   <div class="c1"><span class="n">1</span><span class="w">${esc(x.n1)}</span></div>
+   <div class="c2"><span class="n">2</span><span class="w">${esc(x.n2)}</span></div>
+   <div class="c3"><span class="n">3</span><span class="w">${esc(x.n3)}</span></div>
+  </div>
+
+  <p>${esc(x.s2b)}</p>
+  <ul>${x.s2li.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+ </section>
+
+ <section class="step">
+  <h2><span class="no">3</span>${esc(x.s3)}</h2>
+  <p>${esc(x.s3p)}</p>
+  ${TEL.map(c=>{
+    /* 伏せ字（090-XXXX-XXXX）のままだと壊れた発信リンクになるので、その場合は押せなくする */
+    const masked=/[xX＊*]/.test(c.num);
+    const inner=`<span class="ico">☎</span><span>
+      <span class="who">${esc(lang==='pt'?c.pt:c.ja)}</span>
+      <span class="num">${esc(c.num)}</span>
+      ${masked?`<span class="note" style="display:block;font-size:12px">${esc(x.tel_masked)}</span>`:''}</span>`;
+    return masked
+      ? `<div class="tel" style="border-color:var(--line);opacity:.75">${inner}</div>`
+      : `<a class="tel" href="${dial(c.num)}">${inner}</a>`;
+   }).join('')}
+  <div class="warn">${x.s3warn}</div>
+ </section>
+
+ <section class="step">
+  <h2><span class="no">4</span>${esc(x.s4)}</h2>
+  <p>${x.s4p}</p>
+  <div id="formarea">
+   <label>${esc(x.fq)} <span style="color:var(--bad)">${esc(x.freq)}</span></label>
+   <div class="pickrow">
+    ${[1,2,3].map(i=>`<button type="button" class="pick p${i}" aria-pressed="false" onclick="setPick(${i})">
+      <span class="n">${i}</span><span class="w">${esc(x['n'+i])}</span></button>`).join('')}
+   </div>
+   <label>${esc(x.fwork)}</label>
+   <select id="q_work">${opts(['wok','wng','wtbd'])}</select>
+   <label>${esc(x.ffam)}</label>
+   <select id="q_fam">${opts(['fok','fng','finj'])}</select>
+   <label>${esc(x.fhouse)}</label>
+   <select id="q_house">${opts(['hok','hpart','hbad'])}</select>
+   <label>${esc(x.loc_l)}</label>
+   <p class="note" style="margin:0 0 7px">${esc(x.loc_why)}</p>
+   <button type="button" class="ghost" style="width:100%;padding:12px" onclick="getLoc()">${esc(x.loc_btn)}</button>
+   <div id="locbox"></div>
+   <label>${esc(x.fmsg)}</label>
+   <textarea id="q_msg" rows="3" placeholder="${esc(x.fmsgph)}"></textarea>
+   <button class="go" onclick="submitForm()">${esc(x.send)}</button>
+  </div>
+  <div id="doneArea" class="hide"></div>
+ </section>
+
+ <section class="step">
+  <h2 style="font-size:17px">❓ ${esc(x.qh)}</h2>
+  ${x.q.map(([q,a])=>`<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}
+ </section>
+
+ ${isApp()?'':`<section class="step noprint" style="border-color:var(--accent)">
+  <h2 style="font-size:17px">${esc(x.inst)}</h2>
+  <p>${esc(x.instp)}</p>
+  <p class="note" style="background:var(--accent-soft);padding:11px 14px;border-radius:9px">${x.insti}<br>${x.insta}</p>
+ </section>`}
+
+ <p class="noprint" style="text-align:center"><button class="ghost" onclick="window.print()">🖨 ${esc(x.print)}</button></p>`;
+}
+/* すでにアプリとして開かれているかどうか */
+function isApp(){
+ return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;
+}
+
+function setPick(i){
+ pick=i;
+ document.querySelectorAll('.pick').forEach((b,idx)=>b.setAttribute('aria-pressed',String(idx+1===i)));
+}
+
+/* ===== 位置情報 =====
+   本人がボタンを押したときだけ1回だけ調べる。見張り続けることはしない。 */
+var geo=null;
+function mapUrl(g){return 'https://www.google.com/maps?q='+g.lat+','+g.lng;}
+function locMsg(cls,html){
+ const b=document.getElementById('locbox');
+ if(b)b.innerHTML='<div class="'+cls+'" style="margin:9px 0 0">'+html+'</div>';
+}
+function getLoc(){
+ const x=T[lang];
+ if(!navigator.geolocation){locMsg('warn',esc(x.loc_na));return;}
+ if(location.protocol==='file:'){locMsg('warn',esc(x.loc_https));return;}
+ locMsg('okbox',esc(x.loc_wait));
+ navigator.geolocation.getCurrentPosition(function(p){
+  geo={lat:p.coords.latitude.toFixed(6),lng:p.coords.longitude.toFixed(6),
+       acc:Math.round(p.coords.accuracy)};
+  showLoc();
+ },function(err){
+  geo=null;
+  const m=(err.code===1)?x.loc_deny:(err.code===3?x.loc_time:x.loc_na);
+  locMsg('warn',esc(m));
+ },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+}
+function showLoc(){
+ const x=T[lang];
+ if(!geo){const b=document.getElementById('locbox');if(b)b.innerHTML='';return;}
+ locMsg('okbox','<b>✅ '+esc(x.loc_ok)+'</b><br>'+
+  '<span style="font-family:Consolas,monospace;font-size:14px">'+esc(geo.lat)+', '+esc(geo.lng)+'</span>'+
+  '<span class="note"> （'+esc(x.loc_acc)+' '+geo.acc+'m）</span><br>'+
+  '<a href="'+mapUrl(geo)+'" target="_blank" rel="noopener">'+esc(x.loc_map)+'</a>'+
+  ' ／ <a href="#" onclick="geo=null;showLoc();return false;">'+esc(x.loc_clear)+'</a>');
+}
+function submitForm(){
+ const x=T[lang];
+ if(!pick){alert(x.needst);return;}
+ const v=id=>document.getElementById(id).value;
+ const msg=v('q_msg').trim();
+ document.getElementById('formarea').classList.add('hide');
+ const d=document.getElementById('doneArea');
+ d.className='';
+ d.innerHTML=`<div class="okbox"><b style="font-size:16px">${esc(x.done)}</b><br>${esc(x.donep)}</div>
+  <table style="width:100%;font-size:14.5px;border-collapse:collapse">
+   <tr><td style="padding:6px 0;color:var(--sub)">${esc(x.fq)}</td><td><b>${pick} ${esc(x['n'+pick])}</b></td></tr>
+   <tr><td style="padding:6px 0;color:var(--sub)">${esc(x.fwork)}</td><td>${esc(dv(v('q_work')))}</td></tr>
+   <tr><td style="padding:6px 0;color:var(--sub)">${esc(x.ffam)}</td><td>${esc(dv(v('q_fam')))}</td></tr>
+   <tr><td style="padding:6px 0;color:var(--sub)">${esc(x.fhouse)}</td><td>${esc(dv(v('q_house')))}</td></tr>
+   ${geo?`<tr><td style="padding:6px 0;color:var(--sub)">${esc(x.loc_l)}</td><td>
+     <a href="${mapUrl(geo)}" target="_blank" rel="noopener">${esc(x.loc_map)}</a>
+     <span class="note">（${esc(geo.lat)}, ${esc(geo.lng)}）</span></td></tr>`:''}
+   ${msg?`<tr><td style="padding:6px 0;color:var(--sub)">${esc(x.fmsg)}</td><td>${esc(msg)}</td></tr>`:''}
+  </table>
+  ${MAIL?`<p style="margin-top:14px"><button class="go" onclick="sendMail()">${esc(x.mail_btn)}</button></p>
+   <p class="note" style="margin-top:-4px">${esc(x.mail_note)}</p>`:''}
+  <p><button class="ghost" onclick="render()">${esc(x.again)}</button></p>`;
+ d.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* 報告内容をメールにして送る（件名は番号だけ＝会社側で自動集計できる形） */
+function sendMail(){
+ const x=T[lang];
+ const v=id=>{const e=document.getElementById(id);return e?e.value:'';};
+ const L=[];
+ L.push(x.fq+'： '+pick+' '+x['n'+pick]);
+ L.push(x.fwork+'： '+dv(v('q_work')));
+ L.push(x.ffam+'： '+dv(v('q_fam')));
+ L.push(x.fhouse+'： '+dv(v('q_house')));
+ if(geo)L.push(x.loc_l+'： '+geo.lat+', '+geo.lng+'（'+x.loc_acc+' '+geo.acc+'m）\n'+mapUrl(geo));
+ const m=v('q_msg').trim();
+ if(m)L.push(x.fmsg+'： '+m);
+ const body=L.join('\n')+'\n\n----\n'+(lang==='pt'?ORG_PT:ORG);
+ location.href='mailto:'+encodeURIComponent(MAIL)
+  +'?subject='+encodeURIComponent(String(pick))
+  +'&body='+encodeURIComponent(body);
+}
+
+document.documentElement.lang=(lang==='pt'?'pt-BR':'ja');
+render();
+
+/* 圏外でも開けるようにする（インターネットに置いたときだけ働きます） */
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+<script src="config.js"></script>
+<script src="contacts-loader.js"></script>
+<script src="submit.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
