@@ -138,8 +138,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 14px 40px}
 /* ============ 会社の電話番号 / Telefones da empresa ============
    ここは「はじめの値」です。ふだんの変更は contacts.json を書き換えてください。
    （アプリを作り直さなくても、番号だけ差し替わります）
-   ※ このファイルはインターネットに公開されます。個人の携帯は伏せ字にしてあります。
-     本物の番号は、起動時に会社の倉庫から取りに行きます。 */
+   ※ 社内配布アプリ用。インターネットには公開しないこと。 */
 var TEL=[
  {ja:'豊田担当（佐々木）',pt:'Toyota (Sr. Sasaki)',    who:'佐々木',num:'090-XXXX-XXXX'},
  {ja:'小牧担当（塚崎）',  pt:'Komaki (Sr. Tsukazaki)', who:'塚崎',  num:'080-XXXX-XXXX'},
@@ -310,7 +309,7 @@ function render(){
 
   <div class="mock">
    <div class="bar">✉ ${esc(x.mockbar)}</div>
-   <div class="fld"><b>${esc(x.mockto)}</b><span>anpi.keiline@gmail.com</span></div>
+   <div class="fld"><b>${esc(x.mockto)}</b><span>anpi@k-line.to</span></div>
    <div class="fld"><b>${esc(x.mocksub)}</b><span><span class="strike">${esc(x.mockold)}</span><br>
      <span class="val">1</span> <span class="note">${x.mocknote}</span></span></div>
    <div class="body">${esc(x.mockbodytxt)}</div>
